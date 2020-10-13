@@ -22,4 +22,12 @@ net.core.netdev_max_backlog = 5000
 net.ipv4.tcp_window_scaling = 1
 EOF
 
+
+
+chown root:root /etc/ssh/sshd_config
+
+chmod 600 /etc/ssh/sshd_config
+
+sed -i "/PermitRootLogin/s/yes/no/" /etc/sysconfig/init
+
 exit 0;
