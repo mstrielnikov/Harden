@@ -1,5 +1,7 @@
 #! /usr/bin/sh
 
+#Designed for using with ubuntu and derivatives
+
 cat >>/etc/sysctl.conf <<EOF
 net.ipv4.icmp_echo_ignore_broadcasts = 1
 net.ipv4.icmp_ignore_bogus_error_responses = 1
@@ -25,10 +27,6 @@ net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_syn_backlog = 2048
 net.ipv4.tcp_synack_retries = 3
 EOF
-
-echo 1 > /proc/sys/net/ipv4/tcp_syncookies
-echo 2048 > /proc/sys/net/ipv4/tcp_max_syn_backlog
-echo 3 > /proc/sys/net/ipv4/tcp_synack_retries
 
 apt-get update openssh-server
 
@@ -70,6 +68,7 @@ AllowTcpForwarding no
 PermitTunnel no
 EOF
 
+#Remove weak moduli from RSA
 awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 chown root:root /etc/ssh/sshd_config
@@ -79,5 +78,20 @@ chmod 600 /etc/ssh/sshd_config
 sudo systemctl restart sshd
 
 sshd -T
+
+#Log dropped packets
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+iptables -A LOGGING -j DROP
+
+#blocking null packets.
+iptables -A INPUT -p tcp –tcp-flags ALL NONE -j DROP
+
+#Mitigate third-step 
+iptables -A INPUT -p tcp ! –syn -m state –state NEW -j DROP
+
+#drop XMAS packets
+iptables -A INPUT -p tcp –tcp-flags ALL ALL -j DROP
 
 exit 0;
