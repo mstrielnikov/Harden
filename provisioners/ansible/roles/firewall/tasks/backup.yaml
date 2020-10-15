@@ -1,0 +1,3 @@
+- name: Backup default iptables roules
+  command: "iptables-save > {{iptables_backup_path}}/iptables.backup"
+

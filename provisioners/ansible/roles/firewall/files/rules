@@ -1,0 +1,18 @@
+#Log dropped packets
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+iptables -A LOGGING -j DROP
+
+#blocking null packets.
+iptables -A INPUT -p tcp –tcp-flags ALL NONE -j DROP
+
+#Mitigate third-step handshake explotation
+iptables -A INPUT -p tcp ! –syn -m state –state NEW -j DROP
+
+#drop XMAS packets
+iptables -A INPUT -p tcp –tcp-flags ALL ALL -j DROP
+
+#port scan prevention
+iptables -A port-scan -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s -j RETURN
+iptables -A port-scan -j DROP

@@ -1,0 +1,72 @@
+- name: Load special hardened rules
+  iptables_raw: 
+    name: Special hardened rules
+    keep_unmanaged: no
+    rules: |
+        -N LOGGING
+        -A INPUT -j LOGGING
+        -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+        -A LOGGING -j DROP
+        -A INPUT -p tcp –tcp-flags ALL NONE -j DROP
+        -A INPUT -p tcp ! –syn -m state –state NEW -j DROP
+        -A INPUT -p tcp –tcp-flags ALL ALL -j DROP
+        -A port-scan -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s -j RETURN
+        -A port-scan -j DROP
+
+- name: Log packets arriving into an user-defined chain
+  iptables:
+    chain: LOGGING
+    action: append
+    state: present
+    limit: 2/second
+    limit_burst: 20
+    log_prefix: "IPTABLES:INFO: "
+    log_level: info
+
+- name: Allow traffic rules for ranges
+  iptables:
+    chain: INPUT
+    src_range: "{{item}}"
+    jump: ACCEPT
+  with_items:
+    - ip_allow_ranges
+
+- name: Allow traffic rules for ports
+  iptables:
+    chain: INPUT
+    destination_port: "{{item}}"
+    jump: ACCEPT
+  with_items:
+    - ip_allow_ports
+
+- name: Allow traffic rules for individuals
+  iptables:
+    chain: INPUT
+    destination_port: "{{item}}"
+    jump: ACCEPT
+  with_items:
+    - ip_allow_ip
+
+- name: Reject traffic rules ranges
+  iptables:
+    chain: INPUT
+    src_range: "{{item}}"
+    jump: DROP
+  with_items:
+    - ip_deny_ranges
+
+- name: Reject traffic rules for individuals
+  iptables:
+    chain: INPUT
+    src_range: "{{item}}"
+    jump: DROP
+  with_items:
+    - ip_deny_ranges
+
+- name: Reject traffic rules for ports
+  iptables:
+    chain: INPUT
+    destination_port: "{{item}}"
+    jump: DROP
+  with_items:
+    - ip_deny_ports
