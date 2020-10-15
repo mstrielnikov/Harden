@@ -16,7 +16,14 @@ Vagrant.configure("2") do |config|
       vb.memory = 512
       vb.linked_clone = true
     end
+    
     server.vm.provision "shell", path: "provisioners/scripts/bootstrap.sh"
+
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioners/ansible/main.yaml"
+      ansible.ask_become_pass = true
+    end
+
    end
 
 end
