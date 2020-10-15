@@ -1,0 +1,7 @@
+- name: Configure general settings
+  template:
+    src: "{{module_path}}/sysctl.j2"
+    dest: "{{ sysctl_conf_path }}/sysctl.conf"
+    owner: root
+    group: root
+    mode: 0600

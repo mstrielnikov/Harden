@@ -1,0 +1,37 @@
+sysctl_conf_path: /etc
+
+sysctl_params: 
+  - { option: net.ipv4.conf.all.accept_redirects, value: 0 }
+  - { option: net.ipv4.conf.default.accept_redirects, value: 0 }
+  - { option: net.ipv4.conf.all.secure_redirects, value: 0 }
+  - { option: net.ipv4.conf.default.secure_redirects, value: 0 }
+  - { option: net.ipv6.conf.all.accept_redirects, value: 0 }
+  - { option: net.ipv4.icmp_echo_ignore_broadcasts, value: 1 }
+  - { option: net.ipv4.icmp_ignore_bogus_error_responses, value: 1 }
+  - { option: net.ipv4.conf.default.log_martians, value: 1 }
+  - { option: net.ipv4.conf.all.accept_source_route, value: 0 }
+  - { option: net.ipv4.conf.default.accept_source_route, value: 0 }
+  - { option: net.ipv4.ip_forward, value: 0 }
+  - { option: net.ipv4.conf.all.send_redirects, value: 0 }
+  - { option: net.ipv4.conf.default.send_redirects, value: 0 }
+  - { option: net.ipv4.ip_local_port_range, value: "2000 65000" }
+  - { option: net.ipv4.tcp_window_scaling, value: 1 }
+  - { option: net.ipv4.tcp_syncookies, value: 1 }
+  - { option: net.ipv4.tcp_max_syn_backlog, value: 2048 }
+  - { option: net.ipv4.tcp_synack_retries, value: 3 }
+  - { option: net.ipv4.tcp_rfc1337, value: 1 }
+  - { option: net.ipv4.tcp_rmem, value: "4096 87380 8388608" }
+  - { option: net.ipv4.tcp_wmem, value: "4096 87380 8388608" }
+  - { option: net.ipv4.tcp_keepalive_time, value: 60 }
+  - { option: net.ipv4.tcp_keepalive_intvl, value: 10 }
+  - { option: net.ipv4.tcp_keepalive_probes, value: 3 }
+  - { option: net.ipv4.tcp_congestion_control, value: "bbr" }
+  - { option: net.ipv4.conf.default.rp_filter, value: 1 }
+  - { option: net.ipv4.conf.all.rp_filter, value: 1 }
+  - { option: net.core.default_qdisc, value: "cake" }
+  - { option: net.core.rmem_max, value: 8388608 }
+  - { option: net.core.wmem_max, value: 8388608 }
+  - { option: net.core.netdev_max_backlog, value: 5000 }
+  - { option: kernel.exec-shield, value: 1 }
+  - { option: kernel.randomize_va_space, value: 1 }
+ 
