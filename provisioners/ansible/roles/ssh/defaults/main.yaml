@@ -1,0 +1,9 @@
+sshd_config: /etc/ssh/sshd_config/sshd-config
+ssh_moduli_config: /etc/ssh/moduli
+
+allow_user_ip_list:
+  - "10.1.2.*"
+  - "10.1.3.*"
+
+restrict_user_list: 
+  - { username: "root", ip: "127.0.0.1" }

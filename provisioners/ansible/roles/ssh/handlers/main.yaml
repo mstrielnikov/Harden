@@ -1,0 +1,12 @@
+- name: Enable nfs-service
+  service:
+    name: sshd
+    state: restarted
+    enabled: yes
+
+- name: Verify config syntax
+  command: sshd -t
+
+- name: Test config
+  command: sshd -T
+
