@@ -1,0 +1,5 @@
+- name: Install package
+  import_tasks: "install.yaml"
+
+- name: Logging configuration 
+  import_tasks: "logging.yaml"

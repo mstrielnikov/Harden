@@ -1,0 +1,16 @@
+- name: Ensure rsyslog is present
+  package:
+    name: rsyslog
+    state: present
+  with_items:
+    - logrotate
+    - rsyslog
+  
+- name: Ensure audis syslog plugin is enabled
+  ini_file:
+    path: /etc/audisp/plugins.d/syslog.conf
+    section: null
+    option: active
+    value: 'yes'
+    mode: '0640'
+    backup: "{{ auditd_backup | default(false) }}"

@@ -1,0 +1,5 @@
+- name: Enable and start auditd
+  service:
+    name: auditd
+    state: started
+    enabled: yes

@@ -1,0 +1,38 @@
+- name: "create auditd rules {{ auditd_confdir }} directory"
+  file:
+    path: "{{ auditd_confdir }}"
+    state: directory
+
+- name: Auditd | Config files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: root
+    group: root
+    mode: '0640'
+  with_items:
+    - { src: 'auditd.j2', dest: '{{ auditd_home }}/auditd.conf' }
+    - { src: 'rules.j2',  dest: '{{ auditd_home }}/rules.d/audit.rules' }
+    - { src: 'syslog.j2', dest: '{{ auditd_disp_home }}/plugins.d/syslog.conf' }
+    - { src: 'audisp.j2', dest: '{{ audisp_dir }}/audisp.conf' }
+
+- name: Check if grub is present
+  stat:
+    path: /etc/default/grub
+  register: hasgrub
+
+- block:
+  - name: check if auditing present in grub config
+    command: "egrep '^GRUB_CMDLINE_LINUX=\".*audit=1.*\"' /etc/default/grub"
+    changed_when: false
+    register: auditgrub
+    ignore_errors: true
+    check_mode: no
+
+  - name: Enable Auditing in grub for Processes That Start Prior to auditd - CIS
+    replace:
+      dest: /etc/default/grub
+      regexp: '^GRUB_CMDLINE_LINUX="(.*)"'
+      replace: 'GRUB_CMDLINE_LINUX="\1 audit=1"'
+    when: not auditgrub.stdout
+  when: hasgrub.stat is defined and hasgrub.stat.exists
