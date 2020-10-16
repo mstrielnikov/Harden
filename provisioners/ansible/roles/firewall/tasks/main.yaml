@@ -1,8 +1,8 @@
 - name: Install iptables
-  import_tasks: "{{ module_path }}/install.yaml"
+  import_tasks: "install.yaml"
 
 - name: Firewall for nfs
-  import_tasks: "{{ module_path }}/rules.yaml"
+  import_tasks: "rules.yaml"
 
 - name: Firewall for nfs
-  import_tasks: "{{ module_path }}/backup.yaml"
+  import_tasks: "backup.yaml"
