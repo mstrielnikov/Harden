@@ -148,9 +148,3 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
-
-
-
-{% for entry in exportfs %}
-{{ entry.dir }} {{ entry.ip }}/{{entry.mask}}}({{entry.perm}})
-{% endfor %}
