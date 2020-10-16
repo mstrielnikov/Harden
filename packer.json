@@ -1,0 +1,17 @@
+{
+    "builders": [
+      {
+        "communicator": "ssh",
+        "source_path": "fewpixels/Ubuntu20base",
+        "provider": "virtualbox",
+        "add_force": true,
+        "type": "vagrant"
+      }
+    ],
+    "provisioners": [
+        {
+          "type": "ansible",
+          "playbook_file": "provisioners/ansible/main.yaml"
+        }
+      ]
+  }
