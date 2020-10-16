@@ -1,4 +1,6 @@
+hosts: vagrant
 roles:
+  - {role: logging}
   - {role: sysctl}
   - {role: firewall}
   - {role: ssh}
