@@ -34,13 +34,18 @@
     line: "AllowUsers {{allow_user_ip_list}}"
   when: allow_user_ip_list | length > 0
 
-- name: Allow by user name list 
-  linefile:
-    state: present
-    insertafter: EOF
-    line: | 
-      "Match User {{allow_user_name_list.username}}
-      AllowUsers {{allow_user_name_list.ip}}"
-  with_items:
-    - "{{restrict_user_list}}"
+- block:
+  - name: Allow by user name list 
+    linefile:
+      path: "{{sshd_config_path}}/sshd_config"
+      owner: root
+      group: root
+      mode: '0644'
+      state: present
+      insertafter: EOF
+      line: | 
+        "Match User {{allow_user_name_list.username}}
+        AllowUsers {{allow_user_name_list.ip}}"
+    with_items:
+      - "{{restrict_user_list}}"
   when: restrict_user_list | length > 0
